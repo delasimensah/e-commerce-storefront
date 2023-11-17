@@ -2,18 +2,19 @@ import Link from "next/link";
 
 import MainNav from "@/components/main-nav";
 import Container from "@/components/ui/container";
+
 import NavbarActions from "@/components/navbar-actions";
 import getCategories from "@/actions/get-categories";
 
 const Navbar = async () => {
   const categories = await getCategories();
 
-  return ( 
+  return (
     <div className="border-b">
       <Container>
-        <div className="relative px-4 sm:px-6 lg:px-8 flex h-16 items-center">
-          <Link href="/" className="ml-4 flex lg:ml-0 gap-x-2">
-            <p className="font-bold text-xl">STORE</p>
+        <div className="relative flex h-16 items-center px-4 sm:px-6 lg:px-8">
+          <Link href="/" className="ml-4 flex gap-x-2 lg:ml-0">
+            <p className="text-xl font-bold">STORE</p>
           </Link>
           <MainNav data={categories} />
           <NavbarActions />
@@ -22,5 +23,5 @@ const Navbar = async () => {
     </div>
   );
 };
- 
+
 export default Navbar;

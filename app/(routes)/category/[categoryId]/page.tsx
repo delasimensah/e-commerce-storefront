@@ -34,14 +34,13 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({
   });
   const sizes = await getSizes();
   const colors = await getColors();
-  // const category = await getCategory(params.categoryId);
+  const category = await getCategory(params.categoryId);
 
   return (
     <div className="bg-white">
       <Container>
-        {/* <Billboard 
-          data={category.billboard}
-        /> */}
+        <Billboard data={category.billboard} />
+
         <div className="px-4 pb-24 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-5 lg:gap-x-8">
             <MobileFilters sizes={sizes} colors={colors} />
