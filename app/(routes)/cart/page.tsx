@@ -1,18 +1,22 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-import Container from '@/components/ui/container';
-import useCart from '@/hooks/use-cart';
+import Button from "@/components/ui/button";
+import Container from "@/components/ui/container";
 
-import Summary from './components/summary'
-import CartItem from './components/cart-item';
+import Summary from "./components/summary";
+import CartItem from "./components/cart-item";
+
+import useCart from "@/hooks/use-cart";
 
 export const revalidate = 0;
 
 const CartPage = () => {
   const [isMounted, setIsMounted] = useState(false);
   const cart = useCart();
+  const router = useRouter();
 
   useEffect(() => {
     setIsMounted(true);
@@ -27,9 +31,17 @@ const CartPage = () => {
       <Container>
         <div className="px-4 py-16 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-black">Shopping Cart</h1>
-          <div className="mt-12 lg:grid lg:grid-cols-12 lg:items-start gap-x-12">
+          <div className="mt-12 gap-x-12 lg:grid lg:grid-cols-12 lg:items-start">
             <div className="lg:col-span-7">
-              {cart.items.length === 0 && <p className="text-neutral-500">No items added to cart.</p>}
+              {cart.items.length === 0 && (
+                <div>
+                  <p className="text-neutral-500">No items added to cart.</p>
+
+                  <Button onClick={() => router.push("/")} className="mt-6">
+                    Continue Shopping
+                  </Button>
+                </div>
+              )}
               <ul>
                 {cart.items.map((item) => (
                   <CartItem key={item.id} data={item} />
@@ -41,7 +53,7 @@ const CartPage = () => {
         </div>
       </Container>
     </div>
-  )
+  );
 };
 
 export default CartPage;

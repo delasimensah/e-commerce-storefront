@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
+import qs from "query-string";
 
 import Button from "@/components/ui/button";
 import Currency from "@/components/ui/currency";
@@ -20,29 +21,34 @@ const Summary = () => {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
-  const [status, setStatus] = useState("");
 
-  // useEffect(() => {
-  //   if (searchParams.get("success")) {
-  //     toast.success("Payment completed.");
-  //     removeAll();
-  //   }
+  useEffect(() => {
+    if (searchParams.get("trxref")) {
+      const ref = searchParams.get("trxref")!;
 
-  //   if (searchParams.get("canceled")) {
-  //     toast.error("Something went wrong.");
-  //   }
-  // }, [searchParams, removeAll]);
+      const verifyTrx = async (ref: string) => {
+        const url = qs.stringifyUrl({
+          url: `${process.env.NEXT_PUBLIC_API_URL}/checkout`,
+          query: {
+            trxref: ref,
+          },
+        });
 
-  // useEffect(() => {
-  //   if (status === "success") {
-  //     toast.success("Payment completed.");
-  //     removeAll();
-  //   }
+        const response = await axios.get(url);
 
-  //   if (status === "error") {
-  //     toast.success("Something went wrong.");
-  //   }
-  // }, [removeAll]);
+        if (response.data.status === true) {
+          toast.success("Payment completed.");
+          removeAll();
+        }
+
+        if (response.data.status === false) {
+          toast.error("Something went wrong.");
+        }
+      };
+
+      verifyTrx(ref);
+    }
+  }, [searchParams, removeAll]);
 
   const totalPrice = items.reduce((total, item) => {
     return total + Number(item.price);
@@ -62,8 +68,6 @@ const Summary = () => {
     );
 
     window.location = response.data.url;
-
-    // setStatus(response.data.status);
   };
 
   const inputStyles = "w-full p-2 placeholder:text-sm focus:outline-none";
